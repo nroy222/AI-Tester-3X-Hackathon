@@ -4,7 +4,8 @@
   "description": "QA AI Agent backend for generating and running Playwright tests",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "npx playwright install chromium"
   },
   "dependencies": {
     "axios": "^1.4.0",

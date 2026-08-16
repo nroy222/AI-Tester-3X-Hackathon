@@ -2192,6 +2192,9 @@ function downloadScripts() {
 // ============================================
 
 async function executeTests() {
+    // Test execution runs on the persistent Render service. Vercel serves the UI,
+    // but its serverless functions cannot keep Playwright child processes/SSE alive.
+    const executionApi = 'https://ai-tester-3x-hackathon.onrender.com';
     AppState.executionResults = [];
     executionPreviewState.username = '';
     executionPreviewState.password = '';
@@ -2230,7 +2233,7 @@ async function executeTests() {
 
     // Ensure tests have been generated on the server
     try {
-        const generateResp = await fetch('/generate', {
+        const generateResp = await fetch(`${executionApi}/generate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ testCases: AppState.testCases })
@@ -2251,7 +2254,7 @@ async function executeTests() {
     // Start execution
     let runId;
     try {
-        const execResp = await fetch('/execute', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const execResp = await fetch(`${executionApi}/execute`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
         const execJson = await execResp.json();
         runId = execJson.runId;
         addLog(`Execution started on server (runId=${runId})`, 'info');
@@ -2263,7 +2266,7 @@ async function executeTests() {
 
     // Stream logs via SSE
     try {
-        const evtSource = new EventSource(`/stream/${runId}`);
+        const evtSource = new EventSource(`${executionApi}/stream/${runId}`);
         evtSource.onmessage = (evt) => {
             try {
                 const payload = JSON.parse(evt.data);
@@ -2280,7 +2283,7 @@ async function executeTests() {
 
             // Fetch results
             try {
-                const r = await fetch('/results');
+                const r = await fetch(`${executionApi}/results`);
                 const json = await r.json();
                 AppState.executionResults = json.results || [];
                 addLog(`Loaded ${AppState.executionResults.length} execution results from server`, 'info');
