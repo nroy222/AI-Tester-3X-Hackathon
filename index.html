@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA AI Agent - Intelligent Test Automation Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header hero-shell">
+            <div class="hero-topbar">
+                <div class="logo">
+                    <span class="logo-icon">QA</span>
+                    <div>
+                        <h1>QA AI Agent</h1>
+                        <p class="tagline">PRD to QA automation workflow</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow">WORKFLOW</p>
+                    <h2>Upload a PRD and generate test coverage automatically</h2>
+                    <p>Generate scenarios, create test cases, build Playwright scripts, execute them, and raise Jira defects when needed.</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="config-panel modern-panel">
+            <div class="panel-header">
+                <div>
+                    <p class="section-kicker">CONFIGURATION</p>
+                    <h3>Connect your QA automation stack</h3>
+                </div>
+                <button class="btn btn-primary" onclick="saveConfiguration()">Save Settings</button>
+            </div>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label for="sauceLabsUser">Sauce Labs Username</label>
+                    <input id="sauceLabsUser" type="text" placeholder="standard_user" />
+                </div>
+                <div class="config-item">
+                    <label for="sauceLabsKey">Sauce Labs Access Key</label>
+                    <input id="sauceLabsKey" type="password" placeholder="•••••••••••" />
+                </div>
+                <div class="config-item">
+                    <label for="jiraProject">Jira Project URL</label>
+                    <input id="jiraProject" type="text" placeholder="https://your-company.atlassian.net/jira/software/projects/KAN" />
+                </div>
+                <div class="config-item">
+                    <label for="jiraApiToken">Jira API Token</label>
+                    <input id="jiraApiToken" type="password" placeholder="ATATT..." />
+                </div>
+                <div class="config-item">
+                    <label for="jiraEmail">Jira Email</label>
+                    <input id="jiraEmail" type="email" placeholder="you@company.com" />
+                </div>
+                <div class="config-item">
+                    <label for="reportEmail">Report Email</label>
+                    <input id="reportEmail" type="email" placeholder="qa@company.com" />
+                </div>
+            </div>
+        </section>
+
+        <div class="workflow-container">
+            <!-- Step 1: PRD Upload -->
+            <div class="workflow-step" id="step1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3>PRD Upload & Analysis</h3>
+                </div>
+                <div class="step-content">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📄</div>
+                        <p>Upload your PRD document</p>
+                        <p class="upload-hint">Supports PDF, Word (.docx), Markdown (.md)</p>
+                        <div class="recent-prd-picker">
+                            <label for="recentPrdSelect">Recent PRDs</label>
+                            <select id="recentPrdSelect">
+                                <option value="">Select a recent PRD</option>
+                            </select>
+                        </div>
+                        <input type="file" id="prdUpload" accept=".pdf,.docx,.doc,.md" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
+                        <label for="prdUpload" class="btn btn-secondary upload-file-button">Upload File</label>
+                    </div>
+                    <div class="file-info" id="fileInfo" style="display: none;">
+                        <span class="file-name" id="fileName"></span>
+                        <button class="btn btn-secondary" onclick="openFilePicker(event)">Choose another PRD</button>
+                        <button class="btn btn-danger" onclick="removeFile()">Remove</button>
+                    </div>
+                    <button class="btn btn-primary" id="generateTestCasesBtn" onclick="generateTestCasesFromPRD()" style="display: none; margin-top: 15px;">
+                        📝 Generate Test Cases from PRD
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Test Scenario Generation -->
+            <div class="workflow-step" id="step2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h3>Test Scenario Generation</h3>
+                </div>
+                <div class="step-content">
+                    <div class="placeholder-content">
+                    </div>
+                    <div class="results-container" id="scenarioResults" style="display: none;">
+                        <h4>Generated Test Scenarios</h4>
+                        <div class="scenario-list" id="scenarioList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Test Case Generation -->
+            <div class="workflow-step" id="step3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h3>Test Case Generation</h3>
+                </div>
+                <div class="step-content">
+                    <div class="placeholder-content">
+                    </div>
+                    <div class="results-container" id="testCaseResults" style="display: none;">
+                        <h4>Generated Test Cases</h4>
+                        <div class="test-case-list" id="testCaseList"></div>
+                        <button class="btn btn-secondary" onclick="exportTestCases()">Export to PDF/Word</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Script Generation -->
+            <div class="workflow-step" id="step4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h3>Playwright Script Generation (POM)</h3>
+                </div>
+                <div class="step-content">
+                    <div class="placeholder-content">
+                    </div>
+                    <div class="results-container" id="scriptResults" style="display: none;">
+                        <h4>Generated Playwright Scripts</h4>
+                        <div class="script-list" id="scriptList"></div>
+                        <button class="btn btn-secondary" onclick="downloadScripts()">Download Scripts</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Test Execution -->
+            <div class="workflow-step" id="step5">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h3>Test Execution (Sauce Labs)</h3>
+                </div>
+                <div class="step-content">
+                    <button class="btn btn-primary" id="executeBtn" onclick="executeTests()" disabled>
+                        Execute Tests on Sauce Labs
+                    </button>
+                    <div class="execution-progress" id="executionProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p class="progress-text" id="progressText">Initializing...</p>
+                    </div>
+                    <div class="results-container" id="executionResults" style="display: none;">
+                        <h4>Execution Results</h4>
+                        <div class="execution-stats" id="executionStats"></div>
+                        <div class="test-results-list" id="testResultsList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Defect Management & Reporting -->
+            <div class="workflow-step" id="step6">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h3>Defect Management & Reporting</h3>
+                </div>
+                <div class="step-content">
+                    <div class="defect-section" id="defectSection" style="display: none;">
+                        <h4>Jira Defects Created</h4>
+                        <div class="defect-list" id="defectList"></div>
+                    </div>
+                    <div class="report-section" id="reportSection" style="display: none;">
+                        <h4>Email Report Sent</h4>
+                        <div class="report-summary" id="reportSummary"></div>
+                    </div>
+                    <button class="btn btn-success" id="sendReportBtn" onclick="sendEmailReport()" disabled>
+                        Send Email Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Action Button -->
+        <div class="action-panel">
+                    <button class="btn btn-primary btn-large" id="startPipeline" onclick="startPipeline()" disabled>
+                Start QA Pipeline
+            </button>
+        </div>
+
+        <!-- Status Log -->
+        <div class="status-log">
+            <h3>Activity Log</h3>
+            <div class="log-container" id="logContainer">
+                <div class="log-entry log-info">
+                    <span class="log-time">System:</span>
+                    <span class="log-message">Ready.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sauce Labs Execution Viewer Modal -->
+    <div id="sauceLabsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="width: 95%; max-width: 1400px;">
+            <div class="modal-header">
+                <h2>Sauce Labs - Live Test Execution</h2>
+                <span class="close" onclick="closeSauceLabsViewer()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="sauce-labs-header" style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                    <div class="sauce-info">
+                        <span><strong>Job ID:</strong> <span id="sauceJobId">-</span></span>
+                        <span><strong>Browser:</strong> Chrome 120.0</span>
+                        <span><strong>OS:</strong> Windows 11</span>
+                        <span><strong>Resolution:</strong> 1920x1080</span>
+                        <span><strong>Status:</strong> <span id="jobStatus" class="badge badge-positive">Running</span></span>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <button class="btn btn-secondary" onclick="fetchSauceJobs()">Refresh Sessions</button>
+                        <button class="btn btn-primary" onclick="openSauceDashboard()">Open Sauce Dashboard</button>
+                    </div>
+                </div>
+                <div class="sauce-labs-viewer">
+                    <div class="browser-frame">
+                        <div class="browser-toolbar">
+                            <div class="browser-buttons">
+                                <span class="browser-btn red"></span>
+                                <span class="browser-btn yellow"></span>
+                                <span class="browser-btn green"></span>
+                            </div>
+                            <div class="browser-url">
+                                <span id="browserUrl">https://www.saucedemo.com/</span>
+                            </div>
+                        </div>
+                        <div class="browser-content">
+                            <iframe id="sauceDemoFrame" src="https://www.saucedemo.com/" width="100%" height="600" style="border: none; background: white;"></iframe>
+                        </div>
+                    </div>
+                    <div class="execution-log">
+                        <h3>Real-Time Execution Log</h3>
+                        <div id="currentTestExecution" class="current-test-execution">Waiting for the next test case...</div>
+                        <div class="sauce-log" id="sauceLog"></div>
+
+                        <h4 style="margin-top: 16px;">Sauce Labs Sessions</h4>
+                        <div id="sauceJobsList" style="display: grid; grid-template-columns: 1fr; gap:8px; margin-top:8px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Report Modal -->
+    <div id="emailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="width: 60%; max-width: 600px;">
+            <div class="modal-header">
+                <h2>Email Report Preview</h2>
+                <span class="close" onclick="closeEmailModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="email-preview">
+                    <div class="email-header">
+                        <strong>From:</strong> qa-agent@saucedemo.com
+                        <br>
+                        <strong>To:</strong> <input id="emailToInput" type="email" placeholder="recipient@example.com" style="width: 80%; padding:4px;" />
+                        <br>
+                        <strong>Subject:</strong> Test Execution Report - Sauce Demo Automation
+                    </div>
+                    <div class="email-body" id="emailBody"></div>
+                </div>
+                <div style="margin-top: 16px; display:flex; gap:8px;">
+                    <button class="btn btn-success" onclick="confirmSendEmail()">Send</button>
+                    <button class="btn btn-primary" onclick="closeEmailModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=20260816-25"></script>
+</body>
+</html>

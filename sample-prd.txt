@@ -1,0 +1,16 @@
+Product Requirements Document of SauceDemo
+
+Project: SauceDemo QA review
+
+Objective:
+- Users must be able to log in with valid credentials.
+- Invalid login attempts should show clear errors.
+- Users can add products to cart and complete checkout.
+- Users can log out and return to the login page.
+
+Acceptance criteria:
+1. Valid credentials allow access to the products page.
+2. Invalid credentials show an error message.
+3. Cart badge count updates after add to cart.
+4. Checkout with valid shipping details completes successfully.
+5. Logout returns to the login page.

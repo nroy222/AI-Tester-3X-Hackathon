@@ -1,0 +1,9 @@
+.vercel
+node_modules/
+.env
+.env.*
+generated_tests/results.json
+generated_tests/runner.js
+generated_tests/testcases.json
+generated_tests/screenshots/
+server-test.log
