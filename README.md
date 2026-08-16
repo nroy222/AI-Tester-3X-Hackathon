@@ -145,39 +145,35 @@ The QA AI Agent is an intelligent, end-to-end QA automation platform that bridge
    - Check Jira tickets created for defects
    - Receive comprehensive email report
 
-## Demo
+## Demo (Vercel)
 
-**Live Demo**: [Coming Soon - Deploy to Vercel](https://vercel.com)
+**Live application:** [https://qa-ai-solution.vercel.app](https://qa-ai-solution.vercel.app)
 
-## Screenshots
+The frontend is deployed on Vercel and connects to the Render backend for Playwright test execution.
 
-### Dashboard View
-![Dashboard](screenshots/dashboard.png)
-*Main dashboard showing workflow progress and status*
+## Screenshots and Supporting Documents
 
-### PRD Upload Interface
-![PRD Upload](screenshots/prd-upload.png)
-*User-friendly interface for uploading PRD documents*
+The live application demonstrates the complete workflow:
 
-### Test Scenario Generation
-![Test Scenarios](screenshots/test-scenarios.png)
-*AI-generated test scenarios and test cases*
+1. PRD upload and analysis
+2. Test scenario and test case generation
+3. Playwright script generation
+4. Live execution progress for all generated test cases
+5. Jira defect creation and email report preparation
 
-### Script Generation
-![Script Generation](screenshots/scripts.png)
-*Generated Playwright scripts with POM architecture*
+Open the [live Vercel demo](https://qa-ai-solution.vercel.app) to view the current application.
 
-### Test Execution
-![Execution](screenshots/execution.png)
-*Real-time test execution on Sauce Labs*
+### Live Application Screenshots
 
-### Defect Management
-![Defects](screenshots/defects.png)
-*Automated Jira ticket creation*
+#### Dashboard
 
-### Email Report
-![Email Report](screenshots/email-report.png)
-*Comprehensive email report with metrics*
+![QA AI Agent live dashboard](docs/screenshots/live-dashboard.png)
+
+#### Full Workflow Page
+
+![QA AI Agent full workflow](docs/screenshots/live-workflow.png)
+
+The screenshots above were captured directly from the deployed Vercel application and are stored in `docs/screenshots/`.
 
 ## Project Structure
 
