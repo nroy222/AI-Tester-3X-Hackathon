@@ -10,7 +10,7 @@ const axios = require('axios');
 // Render may use a dashboard-level start command and skip package lifecycle
 // scripts. Ensure the Chromium binary exists before any execution is started.
 try {
-    execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['playwright', 'install', 'chromium'], { stdio: 'inherit' });
+    execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['playwright', 'install', 'chromium', 'chromium-headless-shell'], { stdio: 'inherit' });
 } catch (err) {
     console.warn('Playwright browser install skipped:', err.message);
 }
