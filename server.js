@@ -1,11 +1,19 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, execFileSync } = require('child_process');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { chromium } = require('playwright');
 const axios = require('axios');
+
+// Render may use a dashboard-level start command and skip package lifecycle
+// scripts. Ensure the Chromium binary exists before any execution is started.
+try {
+    execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['playwright', 'install', 'chromium'], { stdio: 'inherit' });
+} catch (err) {
+    console.warn('Playwright browser install skipped:', err.message);
+}
 
 const app = express();
 app.use(cors());
