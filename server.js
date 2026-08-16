@@ -104,7 +104,7 @@ const ProductsPage = require('./pages/productsPage');
     }
 
     const validUsers = new Set(['standard_user', 'problem_user', 'performance_glitch_user', 'visual_user', 'error_user']);
-    const stepDelay = 1500;
+    const stepDelay = 250;
     async function loginAs(page, username = 'standard_user', password = 'secret_sauce', showActions = true) {
         await page.goto('https://www.saucedemo.com/', { waitUntil: 'domcontentloaded', timeout: 30000 });
         if (showActions) console.log('=== ACTION: Navigate to SauceDemo login page ===');
