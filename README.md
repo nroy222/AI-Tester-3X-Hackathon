@@ -173,6 +173,10 @@ Open the [live Vercel demo](https://qa-ai-solution.vercel.app) to view the curre
 
 ![QA AI Agent full workflow](docs/screenshots/live-workflow.png)
 
+#### Completed 32-Test Execution
+
+![Completed 32-test execution](docs/screenshots/completed-execution.png)
+
 The screenshots above were captured directly from the deployed Vercel application and are stored in `docs/screenshots/`.
 
 ## Project Structure
